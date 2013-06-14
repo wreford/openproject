@@ -52,7 +52,6 @@
 /coverage
 /db/*.db
 /db/*.sqlite3
-/db/schema.rb
 /files/*
 /karma/reports
 /log/*.log*
