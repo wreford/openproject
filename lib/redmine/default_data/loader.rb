@@ -54,8 +54,8 @@ module Redmine
             # create default administrator account
             User.create! do |admin|
               admin.login = "admin"
-              admin.password = "admin"
-              admin.password_confirmation = "admin"
+              admin.password = "adminadmin"
+              admin.password_confirmation = "adminadmin"
               admin.admin = true
               admin.firstname = "OpenProject"
               admin.lastname = "Admin"
