@@ -52,6 +52,7 @@ namespace :redmine do
     end
 
     begin
+      require 'project' # circular dependency
       Redmine::DefaultData::Loader.load(current_language)
       puts "Default configuration data loaded."
     rescue Redmine::DefaultData::DataAlreadyLoaded => error
