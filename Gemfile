@@ -54,6 +54,8 @@ gem 'globalize'
 gem 'omniauth'
 gem 'request_store'
 
+
+gem 'finnlabs-themes', :path => '../../finnlabs/finnlabs-themes'
 # TODO: adds #auto_link which was deprecated in rails 3.1
 gem 'rails_autolink'
 gem "will_paginate", '~> 3.0'

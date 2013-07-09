@@ -25,21 +25,20 @@ class FixDifferencesBetweenSchemaRbs < ActiveRecord::Migration
     # which added a limit to the two columns for mysql only which results in different
     # schema.rbs. it wasn't done for postgres because it failed back in 2009, now postgres
     # just ignores it. since it wasn't done for postgres it can't be that important, right?!
-    if ChiliProject::Database.mysql?
-      change_column :wiki_contents, :text, :text
-      change_column :wiki_content_versions, :data, :binary
-    end
+    
+    # this will work with correctly and with postgres
+    max_size = 16.megabytes - 1
+    change_column :wiki_contents, :text, :text, :limit => max_size
+    change_column :wiki_content_versions, :data, :binary, :limit => max_size
   end
 
   def self.down
     # no need for messing with the indices, #up only removes duplicates from schema.rb
     # we don't want to re-add them...
 
-    # but hey, give mysql its limits back!
-    if ChiliProject::Database.mysql?
-      max_size = 16.megabytes
-      change_column :wiki_contents, :text, :text, :limit => max_size
-      change_column :wiki_content_versions, :data, :binary, :limit => max_size
-    end
+    # but hey, give them their old limits back!
+    max_size = 16.megabytes
+    change_column :wiki_contents, :text, :text, :limit => max_size
+    change_column :wiki_content_versions, :data, :binary, :limit => max_size
   end
 end

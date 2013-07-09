@@ -101,6 +101,7 @@ class WikiContentTest < ActiveSupport::TestCase
     page.content = WikiContent.new(:text => "a" * 500.kilobyte, :author => User.find(1))
     assert page.save
     page.reload
+    binding.pry
     assert_equal 500.kilobyte, page.content.text.size
   end
 

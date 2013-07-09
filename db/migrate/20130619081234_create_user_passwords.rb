@@ -26,7 +26,7 @@
 #
 # See doc/COPYRIGHT.rdoc for more details.
 #++
-
+require 'project'
 class CreateUserPasswords < ActiveRecord::Migration
 
   def initialize
