@@ -27,8 +27,11 @@
 # See doc/COPYRIGHT.rdoc for more details.
 #++
 
+require 'subscribem/constraints/subdomain_required'
 
 OpenProject::Application.routes.draw do
+  constraints(Subscribem::Constraints::SubdomainRequired) do
+
   root :to => 'welcome#index', :as => 'home'
 
   rails_relative_url_root = OpenProject::Configuration['rails_relative_url_root'] || ''
@@ -492,4 +495,8 @@ OpenProject::Application.routes.draw do
   match '/robots' => 'welcome#robots', :defaults => { :format => :txt }
   # Used for OpenID
   root :to => 'account#login'
+
+  end
+
+  mount Subscribem::Engine => "/"
 end
