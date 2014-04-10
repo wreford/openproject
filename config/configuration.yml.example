@@ -168,6 +168,15 @@ default:
   # * encrypt data using 'rake db:encrypt RAILS_ENV=production'
   # database_cipher_key:
 
+  # OpenID Connect configuration
+  #
+  # Example specifically for Google as the sole provider:
+  #
+  # openid_connect:
+  #   google:
+  #     identifier: "foobar.apps.googleusercontent.com"
+  #     secret: "baz"
+
 # specific configuration options for production environment
 # that overrides the default ones
 # production:
