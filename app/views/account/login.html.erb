@@ -67,6 +67,7 @@ See doc/COPYRIGHT.rdoc for more details.
       <%= link_to l(:label_password_lost), :controller => '/account', :action => 'lost_password' %>
     </div>
   <% end %>
-  <%= link_to "Omniauth Developer", :controller => '/auth', :action => 'developer' %>
+  <%= link_to "Omniauth Developer", :controller => '/auth', :action => 'developer' %> <br/>
+  <%= link_to image_tag("/assets/sign-in-with-google.png"), :controller => '/auth', :action => 'google' %>
 </div>
 <%= call_hook :view_account_login_bottom %>
