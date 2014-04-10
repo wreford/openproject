@@ -53,6 +53,8 @@ gem 'globalize'
 gem 'omniauth'
 gem 'request_store'
 
+gem 'omniauth-openid-connect', :git => 'git@github.com:machisuji/omniauth-openid-connect.git', :branch => 'google'
+
 # TODO: adds #auto_link which was deprecated in rails 3.1
 gem 'rails_autolink'
 gem "will_paginate", '~> 3.0'
