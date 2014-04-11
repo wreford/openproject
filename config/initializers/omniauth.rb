@@ -24,4 +24,20 @@ Rails.application.config.middleware.use OmniAuth::Builder do
       :secret => google["secret"],
       :redirect_uri => "http://localhost:3000/auth/google/callback"
     }
+
+  heroku = OpenProject::Configuration["openid_connect"]["heroku"]
+  provider :openid_connect,
+    :name => :heroku,
+    :scope => [:openid, :email, :profile],
+    :callback_request_method => :POST,
+    :client_options => {
+      :host => "connect-op.heroku.com",
+      :authorization_endpoint => "/authorizations/new",
+      :token_endpoint => "/access_tokens",
+      :userinfo_endpoint => "/user_info",
+
+      :identifier => heroku["identifier"],
+      :secret => heroku["secret"],
+      :redirect_uri => "http://localhost:3000/auth/heroku/callback"
+    }
 end
