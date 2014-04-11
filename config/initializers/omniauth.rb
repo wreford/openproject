@@ -10,7 +10,6 @@ Rails.application.config.middleware.use OmniAuth::Builder do
     :name => :google,
     :scope => [:openid, :email, :profile],
     :client_auth_method => :not_basic,
-    :callback_request_method => :POST,
     :send_nonce => false,
     :client_options => {
       :port => 443,
@@ -29,7 +28,6 @@ Rails.application.config.middleware.use OmniAuth::Builder do
   provider :openid_connect,
     :name => :heroku,
     :scope => [:openid, :email, :profile],
-    :callback_request_method => :POST,
     :client_options => {
       :host => "connect-op.heroku.com",
       :authorization_endpoint => "/authorizations/new",
