@@ -3,39 +3,16 @@ Rails.application.config.middleware.use OmniAuth::Builder do
     provider :developer, :fields => [:first_name, :last_name, :email]
   end
 
-  provider :developer unless Rails.env.production?
+  ##
+  # Loading OpenID providers manually since rails doesn't do it automatically,
+  # possibly due to non trivially module-name-convertible paths.
+  require 'omniauth/openid_connect/provider'
 
-  google = OpenProject::Configuration["openid_connect"]["google"]
-  provider :openid_connect,
-    :name => :google,
-    :scope => [:openid, :email, :profile],
-    :client_auth_method => :not_basic,
-    :send_nonce => false,
-    :client_options => {
-      :port => 443,
-      :scheme => "https",
-      :host => "accounts.google.com",
-      :authorization_endpoint => "/o/oauth2/auth",
-      :token_endpoint => "/o/oauth2/token",
-      :userinfo_endpoint => "https://www.googleapis.com/plus/v1/people/me/openIdConnect",
+  Dir["lib/omniauth/openid_connect/*.rb"].each do |file|
+    require file.gsub("lib/", "").gsub(".rb", "")
+  end
 
-      :identifier => google["identifier"],
-      :secret => google["secret"],
-      :redirect_uri => "http://localhost:3000/auth/google/callback"
-    }
-
-  heroku = OpenProject::Configuration["openid_connect"]["heroku"]
-  provider :openid_connect,
-    :name => :heroku,
-    :scope => [:openid, :email, :profile],
-    :client_options => {
-      :host => "connect-op.heroku.com",
-      :authorization_endpoint => "/authorizations/new",
-      :token_endpoint => "/access_tokens",
-      :userinfo_endpoint => "/user_info",
-
-      :identifier => heroku["identifier"],
-      :secret => heroku["secret"],
-      :redirect_uri => "http://localhost:3000/auth/heroku/callback"
-    }
+  OmniAuth::OpenIDConnect::Provider.available.each do |pro|
+    provider :openid_connect, pro.new.to_hash
+  end
 end
