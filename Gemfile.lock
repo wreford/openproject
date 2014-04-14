@@ -1,7 +1,7 @@
 GIT
-  remote: git@github.com:machisuji/omniauth-openid-connect.git
-  revision: 9b1687d4d7a2c566bc8e376dd21f5fc611a39f72
-  branch: google
+  remote: git@github.com:finnlabs/omniauth-openid-connect.git
+  revision: 0bdc9d82942a6a2cfdb3aa8e6e941c1ee1f7de23
+  branch: master
   specs:
     omniauth-openid-connect (0.1.0)
       addressable (~> 2.3)
