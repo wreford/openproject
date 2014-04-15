@@ -38,6 +38,34 @@ module OmniAuth
         @providers ||= Set.new
       end
 
+      def self.load_generic_providers
+        providers = Hash(OpenProject::Configuration["openid_connect"]).reject do |key, value|
+          all.any? { |p| p.provider_name == key }
+        end
+
+        providers.each do |name, config|
+          host = config["host"] || URI.parse(config["authorization_endpoint"]).host
+
+          if host
+            create(name, host)
+          else
+            Rails.logger.warn("No host configured for generic provider '#{provider_name}'.")
+          end
+        end
+      end
+
+      def self.create(name, host_name)
+        klass = Class.new(Provider)
+
+        klass.send :define_method, :host do
+          host_name
+        end
+
+        OmniAuth::OpenIDConnect.const_set(name.camelize.classify, klass)
+
+        klass
+      end
+
       def self.available
         all.select(&:available?)
       end
