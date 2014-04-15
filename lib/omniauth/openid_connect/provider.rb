@@ -62,7 +62,11 @@ module OmniAuth
         {
           :name => self.class.provider_name,
           :scope => [:openid, :email, :profile],
-          :client_options => client_options
+          :client_options => client_options.merge( # override with settings from configuration.yml
+            self.class.config.reject do |key, value|
+              ["identifier", "secret"].include? key
+            end
+          )
         }
       end
 
