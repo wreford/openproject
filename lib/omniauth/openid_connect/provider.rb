@@ -86,11 +86,15 @@ module OmniAuth
       end
 
       def identifier
-        self.class.config["identifier"]
+        config("identifier")
       end
 
       def secret
-        self.class.config["secret"]
+        config("secret")
+      end
+
+      def config(key)
+        self.class.config[key] || error_configure(key)
       end
 
       ##
@@ -101,6 +105,19 @@ module OmniAuth
 
       def redirect_uri
         "#{Setting.protocol}://#{Setting.host_name}#{redirect_path}"
+      end
+
+      private
+
+      def error_configure(name)
+        msg = <<-MSG
+              Please configure #{name} in configuration.yml like this:
+
+              openid_connect:
+                #{self.class.provider_name}:
+                  #{name}: <value>
+        MSG
+        raise msg.strip
       end
     end
   end
