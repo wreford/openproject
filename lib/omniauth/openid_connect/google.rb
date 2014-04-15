@@ -36,7 +36,8 @@ module OmniAuth::OpenIDConnect
     def options
       super.merge({
         :client_auth_method => :not_basic,
-        :send_nonce => false
+        :send_nonce => false, # use state instead of nonce
+        :state => lambda { SecureRandom.hex(42) }
       })
     end
 
