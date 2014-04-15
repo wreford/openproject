@@ -40,6 +40,18 @@ describe "OpenID Connect" do
     }
   end
 
+  def redirect_from_provider
+    # Emulate the provider's redirect with a nonsense code.
+    get "/auth/#{provider.class.provider_name}/callback",
+      :code => "foobar",
+      :redirect_uri => "http://localhost:3000/auth/#{provider.class.provider_name}/callack"
+  end
+
+  def click_on_signin
+    # Emulate click on sign-in for that particular provider
+    get "/auth/#{provider.class.provider_name}"
+  end
+
   steps "sign-up and login" do
     before do
       # The redirect will include an authorisation code.
@@ -56,13 +68,15 @@ describe "OpenID Connect" do
     end
 
     after(:all) do
-      User.current = nil
       User.delete_all
     end
 
+    after do
+      User.current = nil
+    end
+
     it "should redirect to the provider's openid connect authentication endpoint" do
-      # Emulate click on sign-up for that particular provider
-      get "/auth/#{provider.class.provider_name}"
+      click_on_signin
 
       expect(response.status).to be 302
       expect(response.location).to match /https:\/\/#{provider.host}.*$/
@@ -75,10 +89,7 @@ describe "OpenID Connect" do
     end
 
     it "should redirect back from the provider to the login page" do
-      # Emulate the provider's redirect with a nonsense code.
-      get "/auth/#{provider.class.provider_name}/callback",
-        :code => "foobar",
-        :redirect_uri => "http://localhost:3000/auth/#{provider.class.provider_name}/callack"
+      redirect_from_provider
 
       expect(response.status).to be 302
       expect(response.location).to match /\/login$/
@@ -98,18 +109,14 @@ describe "OpenID Connect" do
       user.activate
       user.save!
 
-      # Emulate click on sign-in for that particular provider
-      get "/auth/#{provider.class.provider_name}"
+      click_on_signin
 
       expect(response.status).to be 302
       expect(response.location).to match /https:\/\/#{provider.host}.*$/
     end
 
     it "should then login the user upon the redirect back from the provider" do
-      # Emulate the provider's redirect with a nonsense code.
-      get "/auth/#{provider.class.provider_name}/callback",
-        :code => "foobar",
-        :redirect_uri => "http://localhost:3000/auth/#{provider.class.provider_name}/callack"
+      redirect_from_provider
 
       expect(response.status).to be 302
       expect(response.location).to match /my\/first_login$/
