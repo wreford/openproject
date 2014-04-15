@@ -7,7 +7,7 @@ GIT
 
 GIT
   remote: git@github.com:finnlabs/omniauth-openid-connect.git
-  revision: 0bdc9d82942a6a2cfdb3aa8e6e941c1ee1f7de23
+  revision: add41cbcfbebb585667da4050919842a41580473
   branch: master
   specs:
     omniauth-openid-connect (0.1.0)
