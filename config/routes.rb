@@ -60,21 +60,6 @@ OpenProject::Application.routes.draw do
 
   namespace :api do
 
-    namespace :v1 do
-      resources :issues
-      resources :news
-      resources :projects do
-        collection do
-          get :level_list
-        end
-
-        resources :issues
-        resources :news
-      end
-      resources :time_entries, :controller => 'timelog'
-      resources :users
-    end
-
     namespace :v2 do
 
       resources :authentication
@@ -105,6 +90,10 @@ OpenProject::Application.routes.draw do
           get :planning_element_custom_fields
         end
         resources :workflows, only: [:index]
+
+        collection do
+          get :level_list
+        end
       end
 
       resources :custom_fields
