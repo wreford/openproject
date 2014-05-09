@@ -53,7 +53,7 @@ if Rails.env.test?
 
   Capybara::RSpecMatchers::HaveText.module_eval do
     def matches_with_i18n?(actual)
-      if content =~ /t:[^\s]/
+      if content.is_a?(String) && content =~ /t:[^\s]/
         i18n = content
         @content = I18n.t(i18n.split(":").last)
         matches_without_i18n?(actual) || begin
