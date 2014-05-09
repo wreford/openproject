@@ -27,14 +27,34 @@
 # See doc/COPYRIGHT.rdoc for more details.
 #++
 
+##
+# The following bit of code patches rspec to accept i18n codes in all finders and when looking for text.
+# This way labels don't have to be hardcoded which means they can be changed without breaking tests.
+# Examples:
+#
+#   Given I click on "t:account.delete"
+#   When I follow "t:label_register"
+#   And I press "t:button_login"
+#
+# Where the i18n file contains the following:
+#
+#   en:
+#     label_register: "Sign up"
+#     label_button_login: "Sign in"
+#
+#     account:
+#       delete: "Delete account"
+#
 if Rails.env.test?
   require 'capybara'
   require 'capybara/rspec/matchers'
 
+  i18n_regex = /^t:[^\s]/
+
   Capybara::Node::Finders.module_eval do
     def find_with_i18n(*args)
       i18n = args[1]
-      if args.size >= 2 && i18n.is_a?(String) && i18n =~ /^t:[^\s]/
+      if args.size >= 2 && i18n.is_a?(String) && i18n =~ i18n_regex
         begin
           args[1] = I18n.t(i18n.split(":").last)
           find_without_i18n(*args)
@@ -44,12 +64,7 @@ if Rails.env.test?
           find_without_i18n(*args)
         end
       else
-        begin
-          find_without_i18n(*args)
-        rescue Capybara::ElementNotFound => e
-          offending_step = caller.reverse.find { |c| c =~ /_step\.rb/ }
-          raise Capybara::ElementNotFound, e.message + "\nOffending step at:\n  #{offending_step}"
-        end
+        find_without_i18n(*args)
       end
     end
 
@@ -58,7 +73,7 @@ if Rails.env.test?
 
   Capybara::RSpecMatchers::HaveText.module_eval do
     def matches_with_i18n?(actual)
-      if content.is_a?(String) && content =~ /^t:[^\s]/
+      if content.is_a?(String) && content =~ i18n_regex
         i18n = content
         @content = I18n.t(i18n.split(":").last)
         matches_without_i18n?(actual) || begin
