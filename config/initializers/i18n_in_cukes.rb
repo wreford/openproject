@@ -1,3 +1,4 @@
+#-- encoding: UTF-8
 #-- copyright
 # OpenProject is a project management system.
 # Copyright (C) 2012-2014 the OpenProject Foundation (OPF)
@@ -26,26 +27,45 @@
 # See doc/COPYRIGHT.rdoc for more details.
 #++
 
-Feature: Lost Password
+if Rails.env.test?
+  require 'capybara'
+  require 'capybara/rspec/matchers'
 
-  Background:
-    Given there is 1 User with:
-      | Login | johndoe |
-      | Mail | johndoe@example.com |
-      | Firstname | John |
-      | Lastname | Doe |
+  Capybara::Node::Finders.module_eval do
+    def find_with_i18n(*args)
+      i18n = args[1]
+      if args.size >= 2 && i18n.is_a?(String) && i18n =~ /t:[^\s]/
+        begin
+          args[1] = I18n.t(i18n.split(":").last)
+          find_without_i18n(*args)
+        rescue Capybara::ElementNotFound
+          # perhaps it was not intended to be an i18n code after all
+          args[1] = i18n
+          find_without_i18n(*args)
+        end
+      else
+        find_without_i18n(*args)
+      end
+    end
 
-  Scenario: Set a new password using lost password link
-    And I am on the login page
-    When I follow "t:label_password_lost" within "#login-form"
-    And I fill in "johndoe@example.com" for "Email"
-    And I press "Submit"
-    Then I should see "has been sent to you"
-    When I use the first existing token to request a password reset
-    Then I should see "New password"
-    When I fill in "adminAdmin!" for "new_password"
-    And I fill in "adminAdmin!" for "new_password_confirmation"
-    And I click on "Save"
-    Then I should see "Password was successfully updated"
-    When I login as "johndoe" with password "adminAdmin!"
-    Then I should be logged in as "johndoe"
+    alias_method_chain :find, :i18n
+  end
+
+  Capybara::RSpecMatchers::HaveText.module_eval do
+    def matches_with_i18n?(actual)
+      if content =~ /t:[^\s]/
+        i18n = content
+        @content = I18n.t(i18n.split(":").last)
+        matches_without_i18n?(actual) || begin
+          # perhaps it was not intended to be an i18n code after all
+          @content = i18n
+          matches_without_i18n?(actual)
+        end
+      else
+        matches_without_i18n?(actual)
+      end
+    end
+
+    alias_method_chain :matches?, :i18n
+  end
+end
