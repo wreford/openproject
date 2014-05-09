@@ -49,12 +49,10 @@ if Rails.env.test?
   require 'capybara'
   require 'capybara/rspec/matchers'
 
-  i18n_regex = /^t:[^\s]/
-
   Capybara::Node::Finders.module_eval do
     def find_with_i18n(*args)
       i18n = args[1]
-      if args.size >= 2 && i18n.is_a?(String) && i18n =~ i18n_regex
+      if args.size >= 2 && i18n.is_a?(String) && i18n =~ /^t:[^\s]/
         begin
           args[1] = I18n.t(i18n.split(":").last)
           find_without_i18n(*args)
@@ -73,7 +71,7 @@ if Rails.env.test?
 
   Capybara::RSpecMatchers::HaveText.module_eval do
     def matches_with_i18n?(actual)
-      if content.is_a?(String) && content =~ i18n_regex
+      if content.is_a?(String) && content =~ /^t:[^\s]/
         i18n = content
         @content = I18n.t(i18n.split(":").last)
         matches_without_i18n?(actual) || begin
