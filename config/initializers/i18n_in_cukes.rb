@@ -46,7 +46,7 @@ if Rails.env.test?
       else
         begin
           find_without_i18n(*args)
-        rescue Capybara::ElementNotFound e =>
+        rescue Capybara::ElementNotFound => e
           offending_step = caller.reverse.find { |c| c =~ /_step\.rb/ }
           raise Capybara::ElementNotFound, e.message + "\nOffending step at:\n  #{offending_step}"
         end
