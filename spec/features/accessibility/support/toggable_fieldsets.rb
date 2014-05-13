@@ -33,6 +33,7 @@ shared_context 'Toggable fieldset examples' do
   def toggable_title
     title = find('legend a span', text: fieldset_name)
     expect(title).not_to be_nil
+    title
   end
 
   def toggable_content
