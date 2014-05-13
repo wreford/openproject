@@ -44,7 +44,9 @@ describe 'Work package index accessibility' do
 
   describe 'Select all link' do
     def select_all_link
-      find('table.list.issues th.checkbox a')
+      link = find('table.list.issues th.checkbox a')
+      expect(link).not_to be_nil
+      link
     end
 
     def description_for_blind
