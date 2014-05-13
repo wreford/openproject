@@ -36,10 +36,14 @@ shared_context 'Toggable fieldset examples' do
     title
   end
 
-  def toggable_content
+  def toggable_content(attr = nil)
     link = toggable_title.find(:xpath, '..')
     expect(link).not_to be_nil
-    link.find('span.hidden-for-sighted', visible: false)
+
+    content = link.find('span.hidden-for-sighted', visible: false)
+    expect(content).not_to be_nil
+
+    content
   end
 
   shared_context 'find toggle label' do
