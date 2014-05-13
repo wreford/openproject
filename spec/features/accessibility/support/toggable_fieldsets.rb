@@ -31,11 +31,13 @@ require 'features/work_packages/work_packages_page'
 
 shared_context 'Toggable fieldset examples' do
   def toggable_title
-    find('legend a span', text: fieldset_name)
+    title = find('legend a span', text: fieldset_name)
+    expect(title).not_to be_nil
   end
 
   def toggable_content
     link = toggable_title.find(:xpath, '..')
+    expect(link).not_to be_nil
     link.find('span.hidden-for-sighted', visible: false)
   end
 
