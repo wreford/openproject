@@ -41,19 +41,11 @@ angular.module('openproject.workPackages.controllers')
     'WorkPackageLoadingHelper',
     'INITIALLY_SELECTED_COLUMNS',
     'OPERATORS_AND_LABELS_BY_FILTER_TYPE',
-    'columnsModal',
-    'exportModal',
-    'saveModal',
-    'settingsModal',
-    'shareModal',
-    'sortingModal',
     function($scope, $q, $window, $location,
       WorkPackagesTableHelper, WorkPackagesTableService,
       WorkPackageService, QueryService, PaginationService,
       WorkPackageLoadingHelper, INITIALLY_SELECTED_COLUMNS,
-      OPERATORS_AND_LABELS_BY_FILTER_TYPE, columnsModal,
-      exportModal, saveModal, settingsModal, shareModal,
-      sortingModal) {
+      OPERATORS_AND_LABELS_BY_FILTER_TYPE) {
 
   $scope.projectTypes = $window.gon.project_types;
   $scope.showFiltersOptions = false;
@@ -191,30 +183,6 @@ angular.module('openproject.workPackages.controllers')
 
     return $scope.withLoading(WorkPackageService.getWorkPackages, [$scope.projectIdentifier, $scope.query, PaginationService.getPaginationOptions()])
       .then(setupWorkPackagesTable);
-  };
-
-  // Modals
-  $scope.showColumnsModal  = columnsModal.activate;
-  $scope.showExportModal   = exportModal.activate;
-  $scope.showSettingsModal = settingsModal.activate;
-  $scope.showShareModal    = shareModal.activate;
-  $scope.showSortingModal  = sortingModal.activate;
-
-  $scope.showSaveModal     = function(saveAs){
-    scope.$emit('hideAllDropdowns');
-    if( saveAs || scope.query.isNew() ){
-      saveModal.activate();
-    } else {
-      QueryService.saveQuery()
-        .then(function(data){
-          scope.$emit('flashMessage', data.status);
-        });
-    }
-  };
-
-  $scope.showColumnsModal  = function(){
-    scope.$emit('hideAllDropdowns');
-    columnsModal.activate();
   };
 
   // More
