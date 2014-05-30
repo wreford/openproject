@@ -87,8 +87,10 @@ script:
 notifications:
   email: false
 
+addons:
+  sauce_connect: true
+
 # Disabling coverage reporting until CodeClimate supports merging results from multiple partial tests
-# addons:
 #   code_climate:
 #       repo_token:
 #         secure: "W/lyd8Ud18GRASuVShsIKa2MRHhxjh8WICMQ4WKr68qt0X0Tlp7Bclv4ReiEgiQeKsIoJJy5FfJfINdAT8A4sy2JbrLeISShcIU7Kqpfh6DSLNoRAuLz5P7EXMNFns1gBKCmrSzcB+9ksuTLyTCKkjUcj1NbJzGqpB4jSTecAdg="
