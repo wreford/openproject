@@ -40,11 +40,13 @@ angular.module('openproject.workPackages.controllers')
   this.name    = 'Save';
   this.closeMe = saveModal.deactivate;
 
-  $scope.saveQueryAs = function(name) {
-    QueryService.saveQueryAs(name)
-      .then(function(data){
-        saveModal.deactivate();
-        $scope.$emit('flashMessage', data.status);
-      });
+  $scope.saveQueryAs = function(form) {
+    if(form.$valid) {
+      QueryService.saveQueryAs(form.name.$modelValue)
+        .then(function(data){
+          saveModal.deactivate();
+          $scope.$emit('flashMessage', data.status);
+        });
+    }
   };
 }]);
