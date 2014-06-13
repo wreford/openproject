@@ -183,7 +183,7 @@ module Api
         export_formats.push("xls") if Redmine::Plugin.all.sort.map{|f| f.id}.include?(:openproject_xls_export)
 
         @work_packages_meta_data = {
-          query:                        query.as_json(except: :filters, include: :filters),
+          query:                        query.as_json(except: :filters, include: :filters, methods: [:starred]),
           columns:                      get_columns_for_json(query.columns),
           groupable_columns:            get_columns_for_json(query.groupable_columns),
           work_package_count_by_group:  results.work_package_count_by_group,
