@@ -126,7 +126,6 @@ module Api::Experimental
     # Note: Not dry - lifted straight from old queries controller
     def prepare_query
       @query.is_public = false unless User.current.allowed_to?(:manage_public_queries, @project) || User.current.admin?
-      @query.shown_in_all_projects = false
       view_context.add_filter_from_params if params[:fields] || params[:f]
       @query.group_by = params[:group_by] if params[:group_by].present?
       @query.sort_criteria = prepare_sort_criteria if params[:sort]
@@ -135,10 +134,7 @@ module Api::Experimental
       @query.column_names = nil if params[:default_columns]
       @query.name = params[:name] if params[:name]
       @query.is_public = params[:is_public] if params[:is_public]
-      if bool_param(:shown_in_all_projects)
-        @query.shown_in_all_projects = true
-        @query.project = nil
-      end
+      @query.shown_in_all_projects = bool_param(:shown_in_all_projects)
     end
 
     def prepare_sort_criteria
