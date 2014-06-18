@@ -92,12 +92,21 @@ See doc/COPYRIGHT.rdoc for more details.
 * Fix: Asset require for plug-ins
 * Fix: at.who styling
 
+
+* `#4019` Fix focus on project creation
+* `#4021` Separate focus for main menu expander
+* `#4258` Text alignment consistency in tables
+* `#6288` Editing relations in modal dialog leads to warning
+* `#7898` Watchers are not sorted alphabetically in work package screen
+* `#9931` APIv2 does not rewire parents correctly
+
 ## 3.0.4
 
 * `#8421` Make subdirectory configuration less of a hassle
 * `#5652` Fixes: Custom fields with empty name can be created
 * `#7812` 404 when opening keyboard shortcuts in a OpenProject instance running in subfolder
 * `#7893` Notification message support for Internet explorer 9 missing
+* `#7682` Status of work package not displayed when linking work package via ## or ###
 * `#4031` Expand folder icon missing in front of repository folders
 * `#7234` Highlighting of differences in repository does not work
 * `#7493` Work packages with only start date or end date not displayed properly
