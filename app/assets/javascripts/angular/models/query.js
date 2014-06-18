@@ -59,7 +59,8 @@ angular.module('openproject.models')
           'sort': this.sortation.encode(),
           'display_sums': this.displaySums,
           'name': this.name,
-          'is_public': this.isPublic
+          'is_public': this.isPublic,
+          'shown_in_all_projects': this.shownInAllProjects
         }].concat(this.getActiveConfiguredFilters().map(function(filter) {
           return filter.toParams();
         }))
@@ -76,7 +77,8 @@ angular.module('openproject.models')
           'sort': this.sortation.encode(),
           'display_sums': this.displaySums,
           'name': this.name,
-          'is_public': this.isPublic
+          'is_public': this.isPublic,
+          'shown_in_all_projects': this.shownInAllProjects
         }].concat(this.getActiveConfiguredFilters().map(function(filter) {
           return filter.toParams();
         }))
@@ -161,6 +163,32 @@ angular.module('openproject.models')
           return new Filter(self.getExtendedFilterData(filterData));
         });
       }
+    },
+
+    /**
+     * @name isDefault
+     * @function
+     *
+     * @description
+     * Returns true if the query is a default query
+     * @returns {boolean} default
+     */
+    isDefault: function() {
+      return this.name === '_';
+    },
+
+    /**
+     * @name setFilters
+     * @function
+     *
+     * @description
+     * (Re-)sets the query filters to a single filter for status: open
+
+     * @returns {undefined}
+     */
+    setDefaultFilter: function() {
+      var statusOpenFilterData = this.getExtendedFilterData({name: 'status_id', operator: 'o'});
+      this.filters = new Array(new Filter(statusOpenFilterData));
     },
 
     /**
@@ -272,7 +300,7 @@ angular.module('openproject.models')
     },
 
     hasName: function() {
-      return !!this.name && this.name !== '_';
+      return !!this.name && !this.isDefault();
     },
 
   };
