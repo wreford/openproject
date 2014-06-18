@@ -102,6 +102,10 @@ module Api::Experimental
 
     private
 
+    def bool_param(param)
+      params[param] && (["true", "1"].include?(params[param]))
+    end
+
     def setup_query
       @query = retrieve_query
     end
@@ -109,6 +113,7 @@ module Api::Experimental
     # Note: Not dry - lifted straight from old queries controller
     def setup_query_for_create
       @query = Query.new params[:query] ? permitted_params.query : nil
+      @query.project = @project unless params[:query_is_for_all]
       prepare_query
       @query.user = User.current
     end
@@ -121,17 +126,19 @@ module Api::Experimental
     # Note: Not dry - lifted straight from old queries controller
     def prepare_query
       @query.is_public = false unless User.current.allowed_to?(:manage_public_queries, @project) || User.current.admin?
+      @query.shown_in_all_projects = false
       view_context.add_filter_from_params if params[:fields] || params[:f]
       @query.group_by = params[:group_by] if params[:group_by].present?
       @query.sort_criteria = prepare_sort_criteria if params[:sort]
-      @query.project = nil if params[:query_is_for_all]
       @query.display_sums = params[:display_sums] if params[:display_sums].present?
       @query.column_names = params[:c] if params[:c]
       @query.column_names = nil if params[:default_columns]
       @query.name = params[:name] if params[:name]
       @query.is_public = params[:is_public] if params[:is_public]
-      @query.shown_in_all_projects = params[:shown_in_all_projects] if params[:shown_in_all_projects]
-      @query.project = nil if params[:is_for_all]
+      if bool_param(:shown_in_all_projects)
+        @query.shown_in_all_projects = true
+        @query.project = nil
+      end
     end
 
     def prepare_sort_criteria
