@@ -40,13 +40,14 @@ angular.module('openproject.workPackages.controllers')
     'ProjectService',
     'QueryService',
     'PaginationService',
+    'AuthorisationService',
     'WorkPackageLoadingHelper',
     'INITIALLY_SELECTED_COLUMNS',
     'OPERATORS_AND_LABELS_BY_FILTER_TYPE',
     function($scope, $rootScope, $q, $location, $stateParams,
       I18n, WorkPackagesTableService,
       WorkPackageService, ProjectService, QueryService, PaginationService,
-      WorkPackageLoadingHelper, INITIALLY_SELECTED_COLUMNS,
+      AuthorisationService, WorkPackageLoadingHelper, INITIALLY_SELECTED_COLUMNS,
       OPERATORS_AND_LABELS_BY_FILTER_TYPE) {
 
 
@@ -185,6 +186,9 @@ angular.module('openproject.workPackages.controllers')
   $scope.withLoading = function(callback, params){
     return WorkPackageLoadingHelper.withLoading($scope, callback, params, serviceErrorHandler);
   };
+
+  $scope.can = AuthorisationService.can;
+  $scope.cannot = AuthorisationService.cannot;
 
   // Go
 
