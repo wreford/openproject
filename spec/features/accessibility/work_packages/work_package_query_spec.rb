@@ -57,8 +57,8 @@ describe 'Work package index accessibility' do
 
       it do
         expect(select_all_link).to have_selector('.hidden-for-sighted',
-                                                 :visible => false,
-                                                 :text => I18n.t(:button_check_all))
+                                                 visible: false,
+                                                 text: I18n.t(:button_check_all))
       end
     end
 
