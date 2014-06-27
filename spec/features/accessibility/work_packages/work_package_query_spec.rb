@@ -43,13 +43,14 @@ describe 'Work package index accessibility' do
   end
 
   describe 'Select all link' do
+    let(:table_selector) { 'table.workpackages-table th.checkbox a' }
     def select_all_link
-      find('table.workpackages-table th.checkbox a')
+      expect(find(table_selector)).not_to be_nil
+
+      find(table_selector)
     end
 
     describe 'Initial state', js: true do
-      it { expect(select_all_link).not_to be_nil }
-
       it { expect(select_all_link[:title]).to eq(I18n.t(:button_check_all)) }
 
       it { expect(select_all_link[:alt]).to eq(I18n.t(:button_check_all)) }
