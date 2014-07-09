@@ -187,6 +187,12 @@ GEM
       celluloid (>= 0.15.2)
       rb-fsevent (>= 0.9.3)
       rb-inotify (>= 0.9)
+    logglier (0.2.11)
+    lograge (0.3.0)
+      actionpack (>= 3)
+      activesupport (>= 3)
+      railties (>= 3)
+    logstash-event (1.2.02)
     lumberjack (1.0.4)
     mail (2.5.4)
       mime-types (~> 1.16)
@@ -401,6 +407,9 @@ DEPENDENCIES
   json_spec
   launchy (~> 2.3.0)
   letter_opener (~> 1.0.0)
+  logglier
+  lograge
+  logstash-event
   multi_json
   mysql2 (~> 0.3.11)
   net-ldap (~> 0.2.2)

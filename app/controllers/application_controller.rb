@@ -62,6 +62,15 @@ class ApplicationController < ActionController::Base
     cookies.delete(:autologin)
   end
 
+  # append request data to payload
+  # for logging in lograge.custom_options
+  def append_info_to_payload(payload)
+    super
+    payload[:uuid] = request.uuid
+    payload[:host] = request.host
+    payload[:params] = request.params
+  end
+
   # FIXME: Remove this when all of Rack and Rails have learned how to
   # properly use encodings
   before_filter :params_filter
