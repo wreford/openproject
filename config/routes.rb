@@ -557,7 +557,11 @@ OpenProject::Application.routes.draw do
   get 'roles/new' => 'roles#new', as: 'deprecated_roles_new'
 
   # Install the default route as the lowest priority.
-  match '/:controller(/:action(/:id))'
+  match '/:controller(/:action(/:id))', constraints: -> (req) {
+    Rails.logger.warn("Default route used: #{req.path.inspect} #{req.method.inspect}")
+    puts "Default route used: #{req.path.inspect} #{req.method.inspect}"
+    true
+  }
   match '/robots' => 'welcome#robots', :defaults => { :format => :txt }
   root :to => 'account#login'
 end
