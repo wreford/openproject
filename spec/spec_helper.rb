@@ -48,6 +48,14 @@ require 'capybara/rails'
 Dir[Rails.root.join("spec/support/**/*.rb")].each {|f| require f}
 Dir[Rails.root.join("spec/features/support/**/*.rb")].each {|f| require f}
 
+Capybara.configure do |config|
+  server_host = '127.0.0.1'
+  server_port = 3030
+  config.server_port  = server_port
+  config.default_host = server_host
+  config.app_host = "http://#{server_host}:#{server_port}"
+end
+
 RSpec.configure do |config|
   # ## Mock Framework
   #
@@ -107,6 +115,19 @@ RSpec.configure do |config|
 
   # add helpers to parse json-responses
   config.include JsonSpec::Helpers
+
+  config.before do
+    if self.class.metadata[:type] == :request
+      # override ActionDispatch::Integration::Session::DEFAULT_HOST
+      # by default: www.example.com
+      host! "example.org"
+    end
+
+    if [:request, :feature].include?(self.class.metadata[:type])
+      # by default url_for uses www.example.com but there's no www tenant
+      default_url_options[:host] = "example.org"
+    end
+  end
 
   config.after(:each) do
     OpenProject::RSpecLazinessWarn.warn_if_user_current_set(example)
