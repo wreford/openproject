@@ -50,6 +50,11 @@ class ActionDispatch::IntegrationTest
   include Shoulda::Matchers::ActionController
   extend Shoulda::Matchers::ActionController
 
+  def setup
+    super
+    host! "example.org"
+  end
+
   def subject
     @controller
   end
