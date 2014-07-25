@@ -38,6 +38,7 @@ angular.module('openproject.uiComponents')
     transclude: true,
     scope: {
       caption: '@',
+      title: '@',
       collapse: '=',
       expandedStatusTitle: '=?',
       collapsedStatusTitle: '=?'
@@ -49,11 +50,11 @@ angular.module('openproject.uiComponents')
           $scope.statusTitle = $scope.collapsedStatusTitle || I18n.t("js." + DEFAULT_FIELDSET_OPTIONS.collapsed);
         } else {
           $scope.statusTitle = $scope.expandedStatusTitle || I18n.t("js." + DEFAULT_FIELDSET_OPTIONS.expanded);
-
         }
       },
       init = function (state) {
         $scope.collapsed = state;
+        $scope.title = $scope.title || "";
         setTitle(state);
       };
 
