@@ -65,7 +65,10 @@ See doc/COPYRIGHT.rdoc for more details.
                      :multiple => true,
                      :'data-selected' => filter_select(
                                            timeline.selected_grouping_projects,
-                                           :name, :id).to_json
+                                           :name, :id).to_json,
+                     :sortable => true,
+                     :'timeline-autocomplete' => true,
+                     :null_element => true
                    }
         %>
         <% end %>
@@ -83,7 +86,7 @@ See doc/COPYRIGHT.rdoc for more details.
 
                      {:selected => timeline.options['grouping_one_sort']},
                      {:multiple => false,
-                      :size => 1}) %>
+                      :size => 1, :'timeline-select-box' => true}) %>
         </span>
 
       </p>
@@ -119,7 +122,9 @@ See doc/COPYRIGHT.rdoc for more details.
                        :multiple => true,
                        :'data-selected' => filter_select(
                                              timeline.selected_grouping_project_types,
-                                             :name, :id).to_json
+                                             :name, :id).to_json,
+                       :'timeline-autocomplete' => true,
+                       :null_element => true
                      })
           %>
         <% end %>
@@ -136,7 +141,8 @@ See doc/COPYRIGHT.rdoc for more details.
 
                      {:selected => timeline.options['grouping_two_sort']},
                      {:multiple => false,
-                      :size => 1}) %>
+                      :size => 1,
+                      :'timeline-select-box' => true}) %>
         </span>
 
       </p>

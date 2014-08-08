@@ -27,12 +27,13 @@ See doc/COPYRIGHT.rdoc for more details.
 
 ++#%>
 
-<fieldset id="filter_comparison" class="header_collapsible collapsible collapsed">
-  <legend title="<%=l(:description_filter_toggle)%>", onclick="toggleFieldset(this);">
-    <a href="javascript:"><%= l('timelines.vertical_work_package') %></a>
-  </legend>
+<collapsible-fieldset id="filter_vertical_work_package"
+                      class="header_collapsible"
+                      caption="<%= l('timelines.vertical_work_package') %>"
+                      collapse="true"
+                      title="<%= l(:description_filter_toggle) %>">
 
-  <div style="display:none;">
+  <div>
     <div>
       <p class="tl-form-overflow">
         <%= label_tag :timeline_options_vertical_planning_elements,
@@ -43,4 +44,4 @@ See doc/COPYRIGHT.rdoc for more details.
       </p>
     </div>
   </div>
-</fieldset>
+</collapsible-fieldset>

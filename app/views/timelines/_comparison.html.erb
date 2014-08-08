@@ -27,14 +27,15 @@ See doc/COPYRIGHT.rdoc for more details.
 
 ++#%>
 
-<fieldset id="filter_comparison" class="header_collapsible collapsible collapsed">
-  <legend title="<%=l(:description_filter_toggle)%>", onclick="toggleFieldset(this);">
-    <a href="javascript:"><%= l('timelines.filter.comparisons') %></a>
-  </legend>
 
-  <div style="display:none;">
+<collapsible-fieldset id="filter_comparison"
+                      class="header_collapsible"
+                      caption="<%= l('timelines.filter.comparisons') %>"
+                      collapse="true"
+                      title="<%= l(:description_filter_toggle) %>">
+
+  <div>
     <div>
-
       <p class="tl-form-overflow">
         <%= label_tag 'timeline_options_comparison_none',
                       l('timelines.filter.comparison.none') %>
@@ -66,7 +67,7 @@ See doc/COPYRIGHT.rdoc for more details.
                                        [l('timelines.filter.time_relative.months'), '2']
                                      ],
                                      { :selected => timeline.options['compare_to_relative_unit'] },
-                                     { :multiple => false, :size => 1})
+                                     { :multiple => false, :size => 1, :'timeline-select-box' => true})
         %>
 
         <%= l('timelines.filter.comparison.compare_relative',
@@ -94,4 +95,4 @@ See doc/COPYRIGHT.rdoc for more details.
       </p>
     </div>
   </div>
-</fieldset>
+</collapsible-fieldset>

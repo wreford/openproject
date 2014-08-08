@@ -27,10 +27,10 @@ See doc/COPYRIGHT.rdoc for more details.
 
 ++#%>
 
-<fieldset id="filter_general" class="header_collapsible collapsible">
-  <legend title="<%=l(:description_filter_toggle)%>", onclick="toggleFieldset(this);">
-    <a href="javascript:"><%= l('timelines.filter.timeline') %></a>
-  </legend>
+<collapsible-fieldset id="filter_general"
+                      class="header_collapsible"
+                      caption="<%= l('timelines.filter.timeline') %>"
+                      title="<%= l(:description_filter_toggle) %>">
 
   <div>
     <div>
@@ -61,7 +61,8 @@ See doc/COPYRIGHT.rdoc for more details.
                      'timelines.zoom.'),
                    {:selected => timeline.selected_zoom_factor},
                    {:multiple => false,
-                    :size => 1}) %>
+                    :size => 1,
+                    :'timeline-select-box' => true}) %>
 
       </p>
 
@@ -76,7 +77,8 @@ See doc/COPYRIGHT.rdoc for more details.
                      'timelines.outlines.'),
                    {:selected => timeline.selected_initial_outline_expansion},
                    {:multiple => false,
-                    :size => 1}) %>
+                    :size => 1,
+                    :'timeline-select-box' => true}) %>
 
       </p>
 
@@ -125,9 +127,11 @@ See doc/COPYRIGHT.rdoc for more details.
           <%= hidden_field_tag("timeline[options][columns][]",
                   timeline.selected_columns.join(","),
                   {
-                    :"data-values" => internationalized_columns_select_object(timeline.available_columns).concat(timeline.custom_field_columns).to_json
-                  }
-                ) %>
+                    :'data-values' => internationalized_columns_select_object(timeline.available_columns).concat(timeline.custom_field_columns).to_json,
+                    :'timeline-autocomplete' => true,
+                    :sortable => true,
+                    :multiple => true
+                  }) %>
         <% end %>
       </p>
 
@@ -142,10 +146,11 @@ See doc/COPYRIGHT.rdoc for more details.
 
                      {:selected => timeline.options['project_sort']},
                      {:multiple => false,
-                      :size => 1}) %>
+                      :size => 1,
+                      :'timeline-select-box' => true}) %>
         </span>
 
       </p>
     </div>
   </div>
-</fieldset>
+</collapsible-fieldset>

@@ -73,7 +73,9 @@ See doc/COPYRIGHT.rdoc for more details.
                      :multiple => true,
                      :'data-selected' => filter_select(
                                            timeline.selected_project_types,
-                                           :name, :id).to_json
+                                           :name, :id).to_json,
+                     :'timeline-autocomplete' => true,
+                     :null_element => true
                    }) %>
         <% end %>
 
@@ -101,7 +103,9 @@ See doc/COPYRIGHT.rdoc for more details.
                      :multiple => true,
                      :'data-selected' => filter_select(
                                            timeline.selected_project_status,
-                                           :name, :id).to_json
+                                           :name, :id).to_json,
+                     :'timeline-autocomplete' => true,
+                     :null_element => true
                    }) %>
       <% end %>
       </p>
@@ -128,7 +132,9 @@ See doc/COPYRIGHT.rdoc for more details.
                     :multiple => true,
                     :'data-selected' => filter_select(
                                            timeline.selected_project_responsibles,
-                                           :name, :id).to_json
+                                           :name, :id).to_json,
+                    :'timeline-autocomplete' => true,
+                    :null_element => true
                    }) %>
         <% end %>
       </p>
@@ -155,7 +161,9 @@ See doc/COPYRIGHT.rdoc for more details.
                      :multiple => true,
                      :'data-selected' => filter_select(
                                          timeline.selected_parents,
-                                         :name, :id).to_json
+                                         :name, :id).to_json,
+                     :'timeline-autocomplete' => true,
+                     :null_element => true
                    }) %>
         <% end %>
       </p>
@@ -180,7 +188,8 @@ See doc/COPYRIGHT.rdoc for more details.
                        :multiple => true,
                        :'data-selected' => filter_select(
                                              timeline.selected_planning_element_time_types,
-                                             :name, :id).to_json
+                                             :name, :id).to_json,
+                       :'timeline-autocomplete' => true
                      }) %>
         <% end %>
       </p>
@@ -247,7 +256,7 @@ See doc/COPYRIGHT.rdoc for more details.
                                        [l('timelines.filter.time_relative.months'), '2']
                                      ],
                                      { :selected => timeline.options['planning_element_time_relative_one_unit'] },
-                                     { :multiple => false, :size => 1})
+                                     { :multiple => false, :size => 1, :'timeline-select-box' => true})
 
             relative_label_end = label_tag 'timeline_options_planning_element_time_relative_two',
                                            l('timelines.filter.project_time_filter_historical_to'),
@@ -264,7 +273,7 @@ See doc/COPYRIGHT.rdoc for more details.
                                        [l('timelines.filter.time_relative.months'), '2']
                                      ],
                                      { :selected => timeline.options['planning_element_time_relative_two_unit'] },
-                                     { :multiple => false, :size => 1})
+                                     { :multiple => false, :size => 1, :'timeline-select-box' => true})
         %>
 
         <%= l('timelines.filter.project_time_filter_relative',

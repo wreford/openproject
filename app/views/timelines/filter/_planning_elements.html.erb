@@ -26,13 +26,13 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 See doc/COPYRIGHT.rdoc for more details.
 
 ++#%>
+<collapsible-fieldset id="planning_element_filters"
+                      class="header_collapsible"
+                      caption="<%= l('timelines.filter.work_package_filters') %>"
+                      collapse="true"
+                      title="<%= l(:description_filter_toggle) %>">
 
-<fieldset id="planning_element_filters" class="header_collapsible collapsible collapsed">
-  <legend title="<%=l(:description_filter_toggle)%>", onclick="toggleFieldset(this);">
-    <a href="javascript:"><%= l('timelines.filter.work_package_filters') %></a>
-  </legend>
-
-  <div style="display:none;">
+  <div>
     <div>
       <p class="tl-form-overflow">
         <%= label_tag :timeline_options_exclude_own_planning_elements,
@@ -65,7 +65,8 @@ See doc/COPYRIGHT.rdoc for more details.
                        :multiple => true,
                        :'data-selected' => filter_select(
                                              timeline.selected_planning_element_status,
-                                             :name, :id).to_json
+                                             :name, :id).to_json,
+                       :'timeline-autocomplete' => true
                      }) %>
         <% end %>
       </p>
@@ -91,7 +92,8 @@ See doc/COPYRIGHT.rdoc for more details.
                        :multiple => true,
                        :'data-selected' => filter_select(
                                              timeline.selected_planning_element_types,
-                                             :name, :id).to_json
+                                             :name, :id).to_json,
+                       :'timeline-autocomplete' => true
                      }) %>
         <% end %>
       </p>
@@ -117,7 +119,9 @@ See doc/COPYRIGHT.rdoc for more details.
                      :multiple => true,
                      :'data-selected' => filter_select(
                                            timeline.selected_planning_element_responsibles,
-                                           :name, :id).to_json
+                                           :name, :id).to_json,
+                     :'timeline-autocomplete' => true,
+                     :null_element => true
                    } %>
         <% end %>
       </p>
@@ -143,11 +147,13 @@ See doc/COPYRIGHT.rdoc for more details.
                      :multiple => true,
                      :'data-selected' => filter_select(
                                            timeline.selected_planning_element_assignee,
-                                           :name, :id).to_json
+                                           :name, :id).to_json,
+                     :'timeline-autocomplete' => true,
+                     :null_element => true
                    } %>
         <% end %>
       </p>
       <%= render :partial => "timelines/custom_fields", :locals => {:timeline => @timeline, :custom_fields => timeline.get_custom_fields}%>
     </div>
   </div>
-</fieldset>
+</collapsible-fieldset>
