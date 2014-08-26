@@ -58,11 +58,11 @@ module Concerns::OmniauthLogin
     if user.new_record?
       create_user_from_omniauth user, auth_hash
     else
+      login_user_if_active(user)
       if user.active?
         user.log_successful_login
-        OpenProject::OmniAuth::Authorization.after_login! user, auth_hash
+        OpenProject::OmniAuth::Authorization.after_login! user, auth_hash, session
       end
-      login_user_if_active(user)
     end
   end
 

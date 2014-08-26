@@ -52,9 +52,9 @@ module OpenProject
       # Signals that the given user has been logged in.
       #
       # Note: Only call if you know what you are doing.
-      def self.after_login!(user, auth_hash)
+      def self.after_login!(user, auth_hash, session)
         after_login_callbacks.each do |callback|
-          callback.after_login user, auth_hash
+          callback.after_login user, auth_hash, session
         end
       end
 
@@ -103,8 +103,24 @@ module OpenProject
       #
       # @yield [user] Callback called with the successfully logged in user.
       # @yieldparam user [User] User who has been logged in.
-      def self.after_login(&block)
-        add_after_login_callback AfterLoginBlockCallback.new(&block)
+      # @yieldparam auth_hash [Hash] OmniAuth auth hash
+      # @yieldparam session [Hash] User's session
+      def self.after_login(opts = {}, &block)
+        if opts[:provider]
+          after_login_for_provider opts[:provider], &block
+        else
+          add_after_login_callback AfterLoginBlockCallback.new(&block)
+        end
+      end
+
+      def self.after_login_for_provider(provider, &block)
+        callback = AfterLoginBlockCallback.new do |user, auth_hash, session|
+          if auth_hash.provider.to_sym == provider.to_sym
+            block.call user, auth_hash, session
+          end
+        end
+
+        add_after_login_callback callback
       end
 
       ##
@@ -171,8 +187,8 @@ module OpenProject
         #
         # @param [User] User who has been logged in.
         # @param [Omniauth::AuthHash] Omniauth authentication info including credentials.
-        def after_login(user, auth_hash)
-          fail "subclass responsibility: after_login(#{user}, #{auth_hash})"
+        def after_login(user, auth_hash, session)
+          fail "subclass responsibility: after_login(#{user}, #{auth_hash}, #{session})"
         end
       end
 
@@ -185,8 +201,8 @@ module OpenProject
           @block = block
         end
 
-        def after_login(user, auth_hash)
-          block.call user, auth_hash
+        def after_login(user, auth_hash, session)
+          block.call user, auth_hash, session
         end
       end
 
