@@ -40,6 +40,13 @@ module OpenProject
 
         ['true', true].include? value # former to accommodate ENV
       end
+
+      ##
+      # Carrierwave storage type. Possible values are, among others, :file and :fog.
+      # The latter requires further configuration.
+      def attachment_storage
+        (self['attachments_storage'] || 'file').to_sym
+      end
     end
   end
 end

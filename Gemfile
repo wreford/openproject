@@ -99,6 +99,10 @@ gem 'syck', :platforms => [:ruby_20, :mingw_20, :ruby_21, :mingw_21], :require =
 
 gem 'gon', '~> 4.0'
 
+gem 'carrierwave', '~> 0.10.0'
+gem 'fog', '~> 1.23.0', require: "fog/aws/storage"
+gem 'gibberish', '~> 1.4.0'
+
 group :production do
   # we use dalli as standard memcache client
   # requires memcached 1.4+

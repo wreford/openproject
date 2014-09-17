@@ -34,10 +34,22 @@ class AttachmentsController < ApplicationController
 
   def show
     if @attachment.is_diff?
-      @diff = File.new(@attachment.diskfile, "rb").read
+      if @attachment.file.encrypted?
+        dec_file = @attachment.file.decrypt
+        @diff = File.read dec_file
+      else
+        @diff = @attachment.file.read
+      end
+
       render :action => 'diff'
     elsif @attachment.is_text? && @attachment.filesize <= Setting.file_max_size_displayed.to_i.kilobyte
-      @content = File.new(@attachment.diskfile, "rb").read
+      if @attachment.file.encrypted?
+        dec_file = @attachment.file.decrypt
+        @content = File.read dec_file
+      else
+        @content = @attachment.file.read
+      end
+
       render :action => 'file'
     else
       download
@@ -49,13 +61,24 @@ class AttachmentsController < ApplicationController
       @attachment.increment_download
     end
 
-    # browsers should not try to guess the content-type
-    response.headers['X-Content-Type-Options'] = 'nosniff'
+    if @attachment.file.remote? && !@attachment.file.encrypted?
+      redirect_to @attachment.file.url
+    else
+      # browsers should not try to guess the content-type
+      response.headers['X-Content-Type-Options'] = 'nosniff'
 
-    send_file @attachment.diskfile, :filename => filename_for_content_disposition(@attachment.filename),
-                                    :type => @attachment.content_type,
-                                    :disposition => @attachment.content_disposition
+      file = @attachment.file
+      path = file.path
 
+      if @attachment.file.encrypted?
+        path = file.decrypt
+      end
+
+      send_file path,
+                :filename => filename_for_content_disposition(@attachment.filename),
+                :type => @attachment.content_type,
+                :disposition => @attachment.content_disposition
+    end
   end
 
   def destroy

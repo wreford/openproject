@@ -60,6 +60,8 @@ class Attachment < ActiveRecord::Base
   @@storage_path = OpenProject::Configuration['attachments_storage_path'] ||
                    Rails.root.join('files').to_s
 
+  mount_uploader :file, ::FileUploader
+
   def filesize_below_allowed_maximum
     if self.filesize > Setting.attachment_max_size.to_i.kilobytes
       errors.add(:base, :too_long, :count => Setting.attachment_max_size.to_i.kilobytes)
@@ -79,6 +81,8 @@ class Attachment < ActiveRecord::Base
         self.filesize = @temp_file.size
       end
     end
+
+    super incoming_file
   end
 
   def filename=(arg)
@@ -89,8 +93,12 @@ class Attachment < ActiveRecord::Base
     filename
   end
 
-  def file
-    nil
+  def content_type
+    if file.nil? || !file.file.exists?
+      super
+    else
+      file.content_type
+    end
   end
 
   # Copies the temporary file to its final location
