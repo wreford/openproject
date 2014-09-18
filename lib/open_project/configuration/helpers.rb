@@ -47,6 +47,21 @@ module OpenProject
       def attachment_storage
         (self['attachments_storage'] || 'file').to_sym
       end
+
+      ##
+      # Encrypt attachments before committing them to the configured attachment store.
+      # Files will be decrypted locally in order to be served.
+      def encrypt_attachments?
+        self['encrypt_attachments'] == true
+      end
+
+      def fog_credentials
+        Hash[(Hash(self['fog'])['credentials'] || {}).map { |key, value| [key.to_sym, value] }]
+      end
+
+      def fog_directory
+        Hash(self['fog'])['directory']
+      end
     end
   end
 end

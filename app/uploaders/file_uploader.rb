@@ -1,14 +1,21 @@
 require 'carrierwave/processing/encryption'
 
 class FileUploader < CarrierWave::Uploader::Base
-  include CarrierWave::Encryption
-
   def self.storage_type
     OpenProject::Configuration.attachment_storage
   end
 
+  def self.use_encryption?
+    OpenProject::Configuration.encrypt_attachments?
+  end
+
   storage storage_type
-  process :encrypt # @TODO make encryption configurable as well
+
+  if use_encryption?
+    include CarrierWave::Encryption
+
+    process :encrypt # @TODO make encryption (secret etc.) configurable
+  end
 
   def local?
     self.class.storage_type == :file
