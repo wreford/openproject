@@ -42,16 +42,29 @@ Then /^the issue "(.*?)" should have (\d+) watchers$/ do |issue_subject, watcher
 end
 
 Given(/^the issue "(.*?)" has an attachment "(.*?)"$/) do |issue_subject, file_name|
+  content_type = 'image/gif'
   issue = WorkPackage.find(:last, :conditions => {:subject => issue_subject}, :order => :created_at)
   attachment = FactoryGirl.create :attachment,
                                   :author => issue.author,
-                                  :content_type => 'image/gif',
+                                  :content_type => content_type,
                                   :filename => file_name,
                                   :disk_filename => "#{rand(10000000..99999999)}_#{file_name}",
                                   :digest => Digest::MD5.hexdigest(file_name),
                                   :container => issue,
                                   :filesize => rand(100..10000),
                                   :description => 'This is an attachment description'
+
+  require 'tempfile'
+  name = file_name.split(/\./)[0..-2].join('.')
+  ext = file_name.split(/\./).last
+  file = Tempfile.new [name, ".#{ext}"]
+  file.write 'random content which is not actually a gif'
+  file.close
+
+  attachment.file = File.open file
+  attachment.save!
+
+  attachment
 end
 
 Given /^the [Uu]ser "([^\"]*)" has (\d+) [iI]ssue(?:s)? with(?: the following)?:$/ do |user, count, table|

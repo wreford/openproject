@@ -94,7 +94,7 @@ class Attachment < ActiveRecord::Base
   end
 
   def content_type
-    if file.nil? || !file.file.exists?
+    if file.nil? || !(file.file && file.file.exists?)
       super
     else
       file.content_type
