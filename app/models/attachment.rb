@@ -47,9 +47,6 @@ class Attachment < ActiveRecord::Base
 
   after_initialize :set_default_content_type
 
-  before_save :copy_file_to_destination
-  after_destroy :delete_file_on_disk
-
   acts_as_journalized
   acts_as_event title: :filename,
                 url: (Proc.new do |o|
@@ -101,39 +98,9 @@ class Attachment < ActiveRecord::Base
     end
   end
 
-  # Copies the temporary file to its final location
-  # and computes its MD5 hash
-  def copy_file_to_destination
-    if @temp_file && (@temp_file.size > 0)
-      logger.info("Saving attachment '#{self.diskfile}' (#{@temp_file.size} bytes)")
-      md5 = Digest::MD5.new
-      File.open(diskfile, "wb") do |f|
-        # @temp_file might be a String if you parse an incoming mail having an attachment
-        # It is a Mail::Part.decoded String then, which doesn't have the usual file methods.
-        if @temp_file.is_a? String
-          f.write(@temp_file)
-          md5.update(@temp_file)
-        else
-          buffer = ""
-          while (buffer = @temp_file.read(8192))
-            f.write(buffer)
-            md5.update(buffer)
-          end
-        end
-      end
-      self.digest = md5.hexdigest
-      self.content_type = self.class.content_type_for(diskfile)
-    end
-  end
-
-  # Deletes file on the disk
-  def delete_file_on_disk
-    File.delete(diskfile) if filename.present? && File.exist?(diskfile)
-  end
-
   # Returns file's location on disk
   def diskfile
-    "#{@@storage_path}/#{self.disk_filename}"
+    file.path if file
   end
 
   def increment_download
