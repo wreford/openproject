@@ -25,6 +25,9 @@ APP_GROUP=$(${CLI} config:get APP_GROUP)
 case "$1" in
 
   configure)
+    # scale down (so that the app restarts when we scale up later)
+    ${CLI} scale web=0 worker=0 || true
+
     # create attachments folder
     attachments_path=$(${CLI} config:get ATTACHMENTS_STORAGE_PATH || echo "/var/db/${APP_NAME}/files")
     mkdir -p "${attachments_path}"
