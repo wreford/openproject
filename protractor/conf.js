@@ -26,7 +26,7 @@
 // See doc/COPYRIGHT.rdoc for more details.
 //++
 
-exports.config = {
+var config = {
 
   framework: 'mocha',
 
@@ -48,3 +48,17 @@ exports.config = {
 
   baseUrl: 'http://localhost:8080'
 };
+
+if (process.env.TRAVIS_BUILD_NUMBER) {
+  config.sauceUser = process.env.SAUCE_USERNAME;
+  config.sauceKey  = process.env.SAUCE_ACCESS_KEY;
+
+  config.capabilities = {
+    'browserName': 'chrome',
+    'tunnel-identifier': process.env.TRAVIS_JOB_NUMBER,
+    'build': process.env.TRAVIS_BUILD_NUMBER,
+    'name': 'OpenProject Protractor tests'
+  };
+}
+
+exports.config = config;
