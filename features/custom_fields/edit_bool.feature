@@ -41,6 +41,8 @@ Feature: Editing a bool custom field
   @javascript
   Scenario: Adding a localized name
     When I follow "IssueCustomField"
+    # ensure languages are already set back backend process
+    And I reload the custom field page until the german language is selectable
     And I set the english localization of the "name" attribute to "Issue Field"
     And I add the german localization of the "name" attribute as "Ticket Feld"
     And I press "Save"
@@ -54,6 +56,7 @@ Feature: Editing a bool custom field
 
   Scenario: Entering a long name displays an error
     When I follow "IssueCustomField"
+    When I reload the custom field page until the german language is selectable
     And I fill in "custom_field_translations_attributes_0_name" with "Long name which forces an error"
     And I press "Save"
     Then the "custom_field_translations_attributes_0_name" field should contain "Long name which forces an error"

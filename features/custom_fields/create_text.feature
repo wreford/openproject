@@ -38,7 +38,9 @@ Feature: Text custom fields can be created
 
   @javascript
   Scenario: Creating a text custom field with multiple name and default_value localizations
-    When I select "Text" from "custom_field_field_format"
+    # ensure languages are already set back backend process
+    When I reload the custom field page until the german language is selectable
+    And I select "Text" from "custom_field_field_format"
     And I set the english localization of the "name" attribute to "New Field"
     And I add the german localization of the "name" attribute as "Neues Feld"
     And I set the english localization of the "default_value" attribute to "default"

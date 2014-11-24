@@ -31,6 +31,22 @@ Given /^the following languages are active:$/ do |table|
   Setting.available_languages = table.raw.flatten
 end
 
+
+When /^I reload the custom field page until the (.+) language is selectable$/ do |language|
+  locale = locale_for_language language
+
+  selector = "span.translation .locale_selector option[value=#{locale}]"
+
+  spans = page.all(selector)
+
+  while spans.empty?
+    visit page.driver.current_url
+
+    spans = page.all(selector)
+  end
+end
+
+
 Given /^the (.+) called "(.+)" has the following localizations:$/ do |model_name, object_name, table|
   model = model_name.downcase.gsub(/\s/, '_').camelize.constantize
   object = model.find_by_name(object_name)
