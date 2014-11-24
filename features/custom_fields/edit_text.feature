@@ -41,6 +41,7 @@ Feature: Editing text custom fields
   Scenario: Adding localized default_values
     When I go to the custom fields page
     And I follow "My Custom Field"
+    And I reload the custom field page until the german language is selectable
     And I set the english localization of the "default_value" attribute to "default"
     And I add the german localization of the "default_value" attribute as "Standard"
     And I press "Save"
@@ -58,6 +59,7 @@ Feature: Editing text custom fields
       | de            | nil             | default         |
     And I go to the custom fields page
     And I follow "My Custom Field"
+    And I reload the custom field page until the german language is selectable
     And I select "English" from "custom_field_translations_attributes_1_locale"
     And I press "Save"
     And I follow "My Custom Field"
@@ -72,6 +74,7 @@ Feature: Editing text custom fields
       | en            | My Custom Field | default         |
     And I go to the custom fields page
     And I follow "My Custom Field"
+    And I reload the custom field page until the german language is selectable
     And I select "Deutsch" from "custom_field_translations_attributes_0_locale"
     And I press "Save"
     And I follow "My Custom Field"
