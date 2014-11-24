@@ -61,6 +61,7 @@ Feature: Editing text custom fields
     And I follow "My Custom Field"
     And I reload the custom field page until the german language is selectable
     And I select "English" from "custom_field_translations_attributes_1_locale"
+    And I take a screenshot
     And I press "Save"
     And I follow "My Custom Field"
     Then there should be the following localizations:

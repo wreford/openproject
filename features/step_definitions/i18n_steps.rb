@@ -46,7 +46,6 @@ When /^I reload the custom field page until the (.+) language is selectable$/ do
   end
 end
 
-
 Given /^the (.+) called "(.+)" has the following localizations:$/ do |model_name, object_name, table|
   model = model_name.downcase.gsub(/\s/, '_').camelize.constantize
   object = model.find_by_name(object_name)
