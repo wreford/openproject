@@ -89,12 +89,8 @@ end
 
 # Maybe this step can replace 'I change the ... localization of the ... attribute'
 When /^I set the (.+) localization of the "(.+)" attribute to "(.+)"$/ do |language, attribute, value|
-  locale = locale_for_language language
+  span = span_for_localization language, attribute
 
-  # Look for a span with #{attribute}_translation class, which doesn't have an
-  # ancestor with style display: none
-  span = page.find(:xpath, "//span[contains(@class, '#{attribute}_translation') " +
-                    "and not(ancestor-or-self::*[starts-with(normalize-space(substring-after(@style, 'display:')), 'none')])]")
   update_localization(span, language, value)
 end
 
