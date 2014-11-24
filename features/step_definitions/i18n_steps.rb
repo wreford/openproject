@@ -87,7 +87,6 @@ When /^I add the (.+) localization of the "(.+)" attribute as "(.+)"$/ do |langu
   update_localization(span, language, value)
 end
 
-# Maybe this step can replace 'I change the ... localization of the ... attribute'
 When /^I set the (.+) localization of the "(.+)" attribute to "(.+)"$/ do |language, attribute, value|
   span = span_for_localization language, attribute
 
@@ -96,12 +95,16 @@ end
 
 def update_localization(container, language, value)
   new_value = container.find(:css, 'input[type=text], textarea')
+  locale = locale_for_language(language)
   new_locale = container.find(:css, '.locale_selector', visible: false)
 
   new_value.set(value.gsub('\\n', "\n"))
 
-  locale_name = new_locale.all(:css, 'option', visible: false).detect { |o| o.value == locale_for_language(language) }
-  new_locale.select(locale_name.text) if locale_name
+  unless new_locale.all('option').empty?
+    new_locale_name = new_locale.find("option[value=#{locale}]", visible: false).text
+
+    new_locale.select(new_locale_name)
+  end
 end
 
 Then /^there should be the following localizations:$/ do |table|
