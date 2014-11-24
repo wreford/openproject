@@ -29,6 +29,7 @@ See doc/COPYRIGHT.rdoc for more details.
 
 <%= error_messages_for 'custom_field' %>
 
+<%= content_for :header_tags do %>
 <script type="text/javascript">
 //<![CDATA[
 function toggle_custom_field_format() {
@@ -134,6 +135,7 @@ jQuery(".locale_selector").each(function (index) {
 }
 //]]>
 </script>
+<% end %>
 
 <div class="box">
   <p id="custom_field_name_attributes">
