@@ -45,7 +45,6 @@ Feature: Editing a bool custom field
     And I reload the custom field page until the german language is selectable
     And I set the english localization of the "name" attribute to "Issue Field"
     And I add the german localization of the "name" attribute as "Ticket Feld"
-    And I take a screenshot
     And I press "Save"
     Then I should be on the custom fields page
     When I follow "Issue Field"
@@ -59,7 +58,6 @@ Feature: Editing a bool custom field
     When I follow "IssueCustomField"
     When I reload the custom field page until the german language is selectable
     And I fill in "custom_field_translations_attributes_0_name" with "Long name which forces an error"
-    And I take a screenshot
     And I press "Save"
     Then the "custom_field_translations_attributes_0_name" field should contain "Long name which forces an error"
     And I should see "Name is the wrong length" within "#errorExplanation"
@@ -70,7 +68,6 @@ Feature: Editing a bool custom field
       | Taken name        | bool    |
     When I follow "IssueCustomField"
     And I set the english localization of the "name" attribute to "Taken name"
-    And I take a screenshot
     And I press "Save"
     Then I should see "Name has already been taken" within "#errorExplanation"
     And the "custom_field_translations_attributes_0_name" field should contain "Taken name"

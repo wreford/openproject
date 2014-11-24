@@ -62,19 +62,9 @@ Given /^the (.+) called "(.+)" has the following localizations:$/ do |model_name
 end
 
 When /^I delete the (.+) localization of the "(.+)" attribute$/ do |language, attribute|
-  locale = locale_for_language language
+  attribute_span = span_for_localization language, attribute
 
-  page.should have_selector("span.#{attribute}_translation :first-child")
-  spans = page.all(:css, "span.#{attribute}_translation")
-  # Use the [] method since Firefox doesn't change the 'selected' attribute
-  # when choosing the last available option of a select where all other
-  # options are disabled. Check scenario 'Deleting a newly added localization'
-  # when changing this.
-  span = spans.detect do |span|
-    span.find(:css, '.locale_selector')['value'] == locale
-  end
-
-  destroy = span.find(:css, 'a.destroy_locale')
+  destroy = attribute_span.find(:css, 'a.destroy_locale')
 
   destroy.click
 end
@@ -89,11 +79,9 @@ When /^I change the (.+) localization of the "(.+)" attribute to be (.+)$/ do |l
 end
 
 When /^I add the (.+) localization of the "(.+)" attribute as "(.+)"$/ do |language, attribute, value|
-  # Emulate old find behavior, just use first match. Better would be
-  # selecting an element by id.
-  attribute_p = page.find(:xpath, "(//span[contains(@class, '#{attribute}_translation')])[1]/..")
-  add_link = attribute_p.find(:css, '.add_locale')
-  add_link.click
+  attribute_p = page.find("#custom_field_#{attribute}_attributes")
+  attribute_p.click_link(I18n.t(:button_add))
+
   span = attribute_p.all(:css, ".#{attribute}_translation").last
 
   update_localization(span, language, value)

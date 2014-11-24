@@ -48,7 +48,6 @@ Feature: Name localizations of bool custom fields can be deleted
   @javascript
   Scenario: Deleting a localized name
    When I delete the german localization of the "name" attribute
-    And I take a screenshot
     And I press "Save"
     And I follow "My Custom Field"
     Then there should be the following localizations:
@@ -59,7 +58,6 @@ Feature: Name localizations of bool custom fields can be deleted
   Scenario: Deleting a name localization and adding another of same locale in same action
    When I delete the german localization of the "name" attribute
     And I add the german localization of the "name" attribute as "Neuer Name"
-    And I take a screenshot
     And I press "Save"
     And I follow "My Custom Field"
     Then there should be the following localizations:
@@ -71,7 +69,6 @@ Feature: Name localizations of bool custom fields can be deleted
   Scenario: Deleting a name localization frees the locale to be used by other translation field
    When I delete the english localization of the "name" attribute
     And I change the german localization of the "name" attribute to be english
-    And I take a screenshot
     And I press "Save"
     And I follow "Mein Benutzerdefiniertes Feld"
     Then there should be the following localizations:
@@ -85,7 +82,6 @@ Feature: Name localizations of bool custom fields can be deleted
     And I follow "My Custom Field"
     And I add the german localization of the "name" attribute as "To delete"
     And I delete the german localization of the "name" attribute
-    And I take a screenshot
     And I press "Save"
     And I follow "My Custom Field"
     Then there should be the following localizations:
