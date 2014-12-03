@@ -48,11 +48,13 @@
       </div>
       <div class="ined-errors" ng-show="error" role="alert" ng-bind="error"></div>
       <div class="ined-controls" ng-hide="isBusy">
-        <accessible-by-keyboard execute="editForm.$valid && submit(false)" class="ined-edit-save">
+        <accessible-by-keyboard execute="editForm.$valid && submit(false)"
+          ng-show="editForm.$dirty" class="ined-edit-save">
           <icon-wrapper icon-name="yes" icon-title="{{ saveTitle }}">
           </icon-wrapper>
         </accessible-by-keyboard>
-        <accessible-by-keyboard execute="editForm.$valid && submit(true)" class="ined-edit-save-send">
+        <accessible-by-keyboard execute="editForm.$valid && submit(true)"
+          ng-show="editForm.$dirty" class="ined-edit-save-send">
           <span title="{{ saveAndSendTitle }}">
             <i class="icon-yes"></i>
             <i class="icon-mail"></i>
