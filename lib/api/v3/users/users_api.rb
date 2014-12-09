@@ -45,6 +45,12 @@ module API
               UserRepresenter.new(@user)
             end
 
+            delete do
+              fail ::API::Errors::Unauthorized unless current_user.admin?
+              @user.destroy
+
+              status 204
+            end
           end
 
         end

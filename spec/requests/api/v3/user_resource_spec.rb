@@ -66,4 +66,59 @@ describe 'API v3 User resource', type: :request do
       let(:id) { user.id }
     end
   end
+
+  describe '#delete' do
+    let(:path) { "/api/v3/users/#{user.id}" }
+
+    before do
+      allow(User).to receive(:current).and_return current_user
+      delete path
+    end
+
+    subject(:response) { last_response }
+
+    context 'as logged in user' do
+      let(:current_user) { FactoryGirl.create :admin }
+
+      it 'should respond with 204' do
+        expect(subject.status).to eq 204
+      end
+
+      it 'should delete the account' do
+        expect(User.exists?(user.id)).not_to be_true
+      end
+
+      context 'with a non-existent user' do
+        let(:path) { '/api/v3/users/1337' }
+
+        it_behaves_like 'not found', 1337, 'User'
+      end
+
+      context 'with non-admin user' do
+        let(:current_user) { FactoryGirl.create :user, admin: false }
+
+        it 'responds with 403' do
+          expect(subject.status).to eq 403
+        end
+      end
+    end
+
+    context 'as anonymous user' do
+      let(:current_user) { FactoryGirl.create :anonymous }
+
+      context 'when access for anonymous user is allowed' do
+        it 'should respond with 403' do
+          expect(subject.status).to eq 403
+        end
+      end
+
+      context 'when access for anonymous user is not allowed' do
+        before do
+          allow(Setting).to receive(:login_required?).and_return(true)
+        end
+
+        it_behaves_like 'unauthenticated access'
+      end
+    end
+  end
 end
