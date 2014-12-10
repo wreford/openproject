@@ -50,9 +50,7 @@ module API
                 fail ::API::Errors::Unauthorized
               end
 
-              @user.lock! # lock user to disable them until completely deleted
               UsersAPI.delete_user @user, current_user
-              User.current = nil if @user == current_user # log out if deleted oneself
 
               status 202
             end
@@ -61,7 +59,9 @@ module API
         end
 
         def self.delete_user(user, actor)
-          Delayed::Job.enqueue DeleteUserJob.new(user, actor)
+          @user.lock! # lock user to disable them until completely deleted
+          Delayed::Job.enqueue DeleteUserJob.new(user, actor) #
+          User.current = nil if @user == current_user # log out if deleted oneself
         end
       end
     end

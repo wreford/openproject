@@ -29,17 +29,13 @@
 
 ##
 # Implements the deletion of a user through another one.
-class DeleteUser < Struct.new :user, :actor
+class DeleteUserService < Struct.new :user, :actor
   ##
   # Deletes the given user if allowed.
   #
   # @return The deleted user or nil if the user could not be deleted.
   def call
-    if self.class.deletion_allowed? user, actor
-      delete_user user
-    else
-      nil
-    end
+    delete_user user if self.class.deletion_allowed? user, actor
   end
 
   ##

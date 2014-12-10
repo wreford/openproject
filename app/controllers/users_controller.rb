@@ -269,11 +269,7 @@ class UsersController < ApplicationController
     # true if the user deletes him/herself
     self_delete = (@user == User.current)
 
-    # as destroying users is a lengthy process we handle it in the background
-    # and lock the account now so that no action can be performed with it
-    @user.lock!
     delete_user @user
-
     # log the user out if it's a self-delete
     # must be called before setting the flash message
     self.logged_user = nil if self_delete
@@ -321,6 +317,9 @@ class UsersController < ApplicationController
   end
 
   def delete_user(user)
+    # as destroying users is a lengthy process we handle it in the background
+    # and lock the account now so that no action can be performed with it
+    user.lock!
     Delayed::Job.enqueue DeleteUserJob.new(user, User.current)
   end
 
