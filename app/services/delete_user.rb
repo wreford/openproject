@@ -43,7 +43,7 @@ class DeleteUser < Struct.new :user, :actor
   end
 
   ##
-  # Checks if a given may be deleted by another one.
+  # Checks if a given user may be deleted by another one.
   #
   # @param user [User] User to be deleted.
   # @param actor [User] User who wants to delete the given user.
