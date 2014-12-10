@@ -156,9 +156,6 @@ class User < Principal
 
   after_save :update_password
   before_create :sanitize_mail_notification_setting
-  before_destroy :delete_associated_private_queries
-  before_destroy :reassign_associated
-  before_destroy :remove_from_filter
 
   scope :in_group, lambda {|group|
     group_id = group.is_a?(Group) ? group.id : group.to_i
@@ -806,43 +803,6 @@ class User < Principal
     # minimum 1 to keep the actual user password
     keep_count = [1, Setting[:password_count_former_banned].to_i].max
     (passwords[keep_count..-1] || []).each(&:destroy)
-  end
-
-  def remove_from_filter
-    timelines_filter = ['planning_element_responsibles', 'planning_element_assignee', 'project_responsibles']
-    substitute = DeletedUser.first
-
-    timelines = Timeline.all(conditions: ['options LIKE ?', "%#{id}%"])
-
-    timelines.each do |timeline|
-      timelines_filter.each do |field|
-        fieldOptions = timeline.options[field]
-        if fieldOptions && index = fieldOptions.index(id.to_s)
-          timeline.options_will_change!
-          fieldOptions[index] = substitute.id.to_s
-        end
-      end
-
-      timeline.save!
-    end
-  end
-
-  def reassign_associated
-    substitute = DeletedUser.first
-
-    [WorkPackage, Attachment, WikiContent, News, Comment, Message].each do |klass|
-      klass.update_all ['author_id = ?', substitute.id], ['author_id = ?', id]
-    end
-
-    [TimeEntry, Journal, ::Query].each do |klass|
-      klass.update_all ['user_id = ?', substitute.id], ['user_id = ?', id]
-    end
-
-    JournalManager.update_user_references id, substitute.id
-  end
-
-  def delete_associated_private_queries
-    ::Query.delete_all ['user_id = ? AND is_public = ?', id, false]
   end
 
   ##

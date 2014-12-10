@@ -69,19 +69,23 @@ describe 'API v3 User resource', type: :request do
 
   describe '#delete' do
     let(:path) { "/api/v3/users/#{user.id}" }
+    let(:admin_delete) { true }
+    let(:self_delete) { true }
 
     before do
       allow(User).to receive(:current).and_return current_user
+
+      allow(Setting).to receive(:users_deletable_by_admins?).and_return(admin_delete)
+      allow(Setting).to receive(:users_deletable_by_self?).and_return(self_delete)
+
       delete path
     end
 
     subject(:response) { last_response }
 
-    context 'as logged in user' do
-      let(:current_user) { FactoryGirl.create :admin }
-
-      it 'should respond with 204' do
-        expect(subject.status).to eq 204
+    shared_examples 'deletion through allowed user' do
+      it 'should respond with 202' do
+        expect(subject.status).to eq 202
       end
 
       it 'should delete the account' do
@@ -103,22 +107,58 @@ describe 'API v3 User resource', type: :request do
       end
     end
 
+    shared_examples 'deletion is not allowed' do
+      it 'should respond with 403' do
+        expect(subject.status).to eq 403
+      end
+
+      it 'should not delete the user' do
+        expect(User.exists?(user.id)).to be_true
+      end
+    end
+
+    context 'as admin' do
+      let(:current_user) { FactoryGirl.create :admin }
+
+      context 'with users deletable by admins' do
+        let(:admin_delete) { true }
+
+        it_behaves_like 'deletion through allowed user'
+      end
+
+      context 'with users not deletable by admins' do
+        let(:admin_delete) { false }
+
+        it_behaves_like 'deletion is not allowed'
+      end
+    end
+
+    context 'as non-admin' do
+      let(:current_user) { FactoryGirl.create :user, admin: false }
+
+      it_behaves_like 'deletion is not allowed'
+    end
+
+    context 'as self' do
+      let(:current_user) { user }
+
+      context 'with self-deletion allowed' do
+        let(:self_delete) { true }
+
+        it_behaves_like 'deletion through allowed user'
+      end
+
+      context 'with self-deletion not allowed' do
+        let(:self_delete) { false }
+
+        it_behaves_like 'deletion is not allowed'
+      end
+    end
+
     context 'as anonymous user' do
       let(:current_user) { FactoryGirl.create :anonymous }
 
-      context 'when access for anonymous user is allowed' do
-        it 'should respond with 403' do
-          expect(subject.status).to eq 403
-        end
-      end
-
-      context 'when access for anonymous user is not allowed' do
-        before do
-          allow(Setting).to receive(:login_required?).and_return(true)
-        end
-
-        it_behaves_like 'unauthenticated access'
-      end
+      it_behaves_like 'deletion is not allowed'
     end
   end
 end
