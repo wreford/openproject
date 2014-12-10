@@ -85,17 +85,18 @@ class DeleteUserService < Struct.new :user, :actor
     end
 
     def remove_from_filter(user)
-      timelines_filter = ['planning_element_responsibles', 'planning_element_assignee', 'project_responsibles']
+      timelines_filter =
+        %w(planning_element_responsibles planning_element_assignee project_responsibles)
       substitute = DeletedUser.first
 
       timelines = Timeline.all(conditions: ['options LIKE ?', "%#{user.id}%"])
 
       timelines.each do |timeline|
         timelines_filter.each do |field|
-          fieldOptions = timeline.options[field]
-          if fieldOptions && index = fieldOptions.index(user.id.to_s)
+          field_options = timeline.options[field]
+          if field_options && index = field_options.index(user.id.to_s)
             timeline.options_will_change!
-            fieldOptions[index] = substitute.id.to_s
+            field_options[index] = substitute.id.to_s
           end
         end
 
