@@ -51,17 +51,24 @@ describe User, 'deletion', type: :model do
   }
 
   let(:substitute_user) { DeletedUser.first }
+  let(:admin) { FactoryGirl.create :admin }
 
   before do
     # for some reason there seem to be users in the db
     User.delete_all
     user.save!
     user2.save!
+
+    allow(Setting).to receive(:users_deletable_by_admins?).and_return(true)
+  end
+
+  def delete_user(user)
+    DeleteUserService.new(user, admin).call
   end
 
   describe 'WHEN there is the user' do
     before do
-      user.destroy
+      delete_user user
     end
 
     it { expect(User.find_by_id(user.id)).to be_nil }
@@ -82,7 +89,7 @@ describe User, 'deletion', type: :model do
       end
       associated_instance.save!
 
-      user.destroy
+      delete_user user
       associated_instance.reload
     end
 
@@ -117,7 +124,7 @@ describe User, 'deletion', type: :model do
       end
       associated_instance.save!
 
-      user.destroy
+      delete_user user
       associated_instance.reload
     end
 
@@ -144,7 +151,7 @@ describe User, 'deletion', type: :model do
       end
       associated_instance.save!
 
-      user.destroy
+      delete_user user
       associated_instance.reload
     end
 
@@ -220,7 +227,7 @@ describe User, 'deletion', type: :model do
       associated_instance.responsible = user
       associated_instance.save!
 
-      user.destroy
+      delete_user user
       associated_instance.reload
     end
 
@@ -335,7 +342,7 @@ describe User, 'deletion', type: :model do
   describe 'WHEN the user is a member of a project' do
     before do
       member # saving
-      user.destroy
+      delete_user user
     end
 
     it { expect(Member.find_by_id(member.id)).to be_nil }
@@ -353,7 +360,7 @@ describe User, 'deletion', type: :model do
     before do
       watch.save!
 
-      user.destroy
+      delete_user user
     end
 
     it { expect(Watcher.find_by_id(watch.id)).to be_nil }
@@ -369,7 +376,7 @@ describe User, 'deletion', type: :model do
     before do
       token.save!
 
-      user.destroy
+      delete_user user
     end
 
     it { expect(Token.find_by_id(token.id)).to be_nil }
@@ -381,7 +388,7 @@ describe User, 'deletion', type: :model do
     before do
       query.save!
 
-      user.destroy
+      delete_user user
     end
 
     it { expect(Query.find_by_id(query.id)).to be_nil }
@@ -434,7 +441,7 @@ describe User, 'deletion', type: :model do
       associated_instance.user = user
       associated_instance.save!
 
-      user.destroy
+      delete_user user
       associated_instance.reload
     end
 
@@ -456,7 +463,7 @@ describe User, 'deletion', type: :model do
     before do
       project.responsible = user
       project.save!
-      user.destroy
+      delete_user user
       project.reload
     end
 
@@ -472,7 +479,7 @@ describe User, 'deletion', type: :model do
 
     before do
       category.save!
-      user.destroy
+      delete_user user
       category.reload
     end
 
@@ -489,7 +496,7 @@ describe User, 'deletion', type: :model do
       timeline.options['project_responsibles'] = [user.id.to_s]
       timeline.save!
 
-      user.destroy
+      delete_user user
       timeline.reload
     end
 
