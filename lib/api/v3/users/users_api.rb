@@ -46,7 +46,7 @@ module API
             end
 
             delete do
-              unless DeleteUser.deletion_allowed? @user, current_user
+              unless DeleteUserService.deletion_allowed? @user, current_user
                 fail ::API::Errors::Unauthorized
               end
 
