@@ -34,7 +34,7 @@ class DeleteUserJob
   end
 
   def perform
-    unless DeleteUser.new(user, actor).call
+    unless DeleteUserService.new(user, actor).call
       Rails.logger.warn(
         "#{actor.name} (#{actor.id}) is not allowed to delete #{user.name} (#{user.id})")
     end

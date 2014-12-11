@@ -340,7 +340,7 @@ class UsersController < ApplicationController
   end
 
   def check_if_deletion_allowed
-    render_404 unless DeleteUser.deletion_allowed? @user, User.current
+    render_404 unless DeleteUserService.deletion_allowed? @user, User.current
   end
 
   def my_or_admin_layout
