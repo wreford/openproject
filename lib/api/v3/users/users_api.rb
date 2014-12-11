@@ -59,9 +59,9 @@ module API
         end
 
         def self.delete_user(user, actor)
-          @user.lock! # lock user to disable them until completely deleted
+          user.lock! # lock user to disable them until completely deleted
           Delayed::Job.enqueue DeleteUserJob.new(user, actor) #
-          User.current = nil if @user == current_user # log out if deleted oneself
+          User.current = nil if user == actor # log out if deleted oneself
         end
       end
     end
